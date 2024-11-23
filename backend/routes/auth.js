@@ -2,16 +2,16 @@ const express = require("express")
 const router = express.Router()
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const { prismaClient } = require('@prisma/client')
-const prisma = new prismaClient()
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 router.post('/signup',async(req,res)=>{
-    const{ fullname , email , password , role = "USER"} = req.body
+    const{ fullName , email , password , role = "USER"} = req.body
     const hashedPassword = await bcrypt.hash(password,10)
     try{
         const response = await prisma.user.create({
             data : {
-                fullname,
+                fullName,
                 email,
                 password : hashedPassword,
                 role
