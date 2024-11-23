@@ -12,3 +12,68 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum ApplicationStatus {
+  APPLIED
+  INTERVIEW
+  REJECTED
+  ACCEPTED
+}
+
+model User {
+  id                 Int          @id @default(autoincrement())
+  email              String       @unique
+  password           String
+  fullName           String
+  phoneNumber        String
+  role               UserRole     @default(USER)
+  bio                String?
+  resume             String       // URL of the resume file
+  resumeOriginalName String
+  company            String
+  profilePhoto       String       @default("")
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  skills             Skill[]      @relation("UserSkills")
+  applications       Application[]
+  jobsCreated        Job[]        @relation("JobCreatedBy")
+}
+
+
+model Skill {
+  id               Int           @id @default(autoincrement())
+  name             String        @unique
+
+  users            User[]        @relation("UserSkills")
+  jobRequirements  Job[]         @relation("JobRequirements")
+}
+
+model Job {
+  id               Int           @id @default(autoincrement())
+  title            String
+  description      String
+  requirements     Skill[]       @relation("JobRequirements")
+  salary           Int
+  location         String
+  jobType          String
+  positions        Int
+  createdBy        User          @relation("JobCreatedBy", fields: [createdById], references: [id])
+  createdById      Int
+  applications     Application[]
+}
+
+model Application {
+  id               Int               @id @default(autoincrement())
+  userId           Int
+  jobId            Int
+  status           ApplicationStatus @default(APPLIED)
+  appliedAt        DateTime          @default(now())
+  user             User              @relation(fields: [userId], references: [id])
+  job              Job               @relation(fields: [jobId], references: [id])
+}
