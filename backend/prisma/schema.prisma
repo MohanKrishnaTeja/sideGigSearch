@@ -71,7 +71,7 @@ model Job {
   requirements     Skill[]       @relation("JobRequirements")
   salary           Int
   location         String
-  jobType          String
+  noOfHours        Int
   positions        Int
   createdBy        User          @relation("JobCreatedBy", fields: [createdById], references: [id])
   createdById      Int
