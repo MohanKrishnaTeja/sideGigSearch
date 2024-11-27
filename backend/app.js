@@ -4,19 +4,24 @@ const cors = require("cors")
 require("dotenv").config()
 const authRoute = require("./routes/auth")
 const createProfileRoute = require("./routes/createProfile")
+const applyJobsRoute = require("./routes/applyjobs")
+const jobsRoute = require("./routes/jobs")
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient()
 
 app.use(express.json())
 app.use(cors())
 app.use("/",authRoute)
-app.use("/api",createProfileRoute)
+app.use("/",createProfileRoute)
+app.use("/",jobsRoute)
+app.use("/",applyJobsRoute)
 
 
 
 
 
-const port = 4000
+
+const port = 5000
 app.listen(port,()=>{
     console.log(
         `server running at port ${port}`

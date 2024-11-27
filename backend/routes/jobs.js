@@ -7,7 +7,7 @@ const authorizeRoles = require('../middleware/authorizeRoles');
 
 // 1. Post a Job (Only Admin)
 router.post('/jobs', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
-  const { title, description, requirements, salary, location, jobType, positions } = req.body;
+  const { title, description, requirements, salary, location, noOfHours, positions } = req.body;
 
   try {
     const job = await prisma.job.create({
