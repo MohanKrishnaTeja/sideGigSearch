@@ -1,12 +1,13 @@
 
 import './App.css'
+import Navbar from './components/shared/Navebar'
 
 function App() {
   
 
   return(
     <div >
-      hey this is from frontend
+      <Navbar></Navbar>
     </div>
   )
 }
