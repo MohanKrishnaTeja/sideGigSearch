@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "../ui/button";
 import { LogOut, User2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 
 export default function Navbar() {
@@ -16,15 +17,15 @@ export default function Navbar() {
                 </div>
                 <div className="flex items-center gap-10">
                     <ul className="flex font-medium items-center gap-5 ">
-                        <li>Home</li>
+                        <Link to= "/"><li>Home</li></Link>
                         <li>Jobs</li>
                         <li>Browse</li>
                     </ul>
                     {
                         !user ? (
                             <div className="flex gap-1">
-                                <Button variant = "outline">login</Button>
-                                <Button variant = "outline">Signup</Button>
+                                <Link to = "/signin"><Button variant = "outline">login</Button></Link>
+                                <Link to = "/signup"><Button variant = "outline">Signup</Button></Link>
                             </div>
                         ) : (
                             <Popover>
