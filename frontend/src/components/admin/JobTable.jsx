@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function JobTable() {
     // Placeholder data
@@ -36,8 +37,12 @@ export default function JobTable() {
                 </thead>
                 <tbody>
                     {jobs.map((job) => (
-                        <tr key={job.id}>
-                            <td className="border border-gray-300 px-4 py-2">{job.title}</td>
+                        <tr key={job.id} className="hover:bg-gray-100">
+                            <td className="border border-gray-300 px-4 py-2">
+                                <Link to={`/adminjobdescription/${job.id}`} className="">
+                                    {job.title}
+                                </Link>
+                            </td>
                             <td className="border border-gray-300 px-4 py-2">{job.description}</td>
                             <td className="border border-gray-300 px-4 py-2">{job.location}</td>
                             <td className="border border-gray-300 px-4 py-2">{job.salary}</td>
@@ -49,4 +54,5 @@ export default function JobTable() {
         </div>
     );
 }
+
 
