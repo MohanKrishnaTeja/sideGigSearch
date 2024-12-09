@@ -7,63 +7,74 @@ import { useSelector, useDispatch } from "react-redux"; // Import hooks from Red
 import { setToken, setUser } from "../../redux/authSlice"; // Import actions
 
 export default function Navbar() {
-  const dispatch = useDispatch();
-  
-  // Access token from Redux store
-  const token = useSelector((state) => state.auth.token);
-  const user = useSelector((state) => state.auth.User);
+    const dispatch = useDispatch();
 
-  const handleLogout = () => {
-    // Clear token and user details
-    dispatch(setToken(null));
-    dispatch(setUser(null));
+    // Access token from Redux store
+    const token = useSelector((state) => state.auth.token);
+    const user = useSelector((state) => state.auth.User);
 
-    // Clear token from localStorage
-    localStorage.removeItem("authToken");
-  };
+    const handleLogout = () => {
+        // Clear token and user details
+        dispatch(setToken(null));
+        dispatch(setUser(null));
 
-  return (
-    <div className="bg-white">
-      <div className="flex items-center justify-between mx-auto max-w-7xl h-16">
-        <div>
-          <h1 className="text-2xl font-bold">Side Gig Search</h1>
-        </div>
-        <div className="flex items-center gap-10">
-          <ul className="flex font-medium items-center gap-5 ">
-            <Link to="/"><li>Home</li></Link>
-            <Link to="/jobs"><li>Jobs</li></Link>
-            <li>Browse</li>
-          </ul>
-          {!token ? (
-            <div className="flex gap-1">
-              <Link to="/signin"><Button variant="outline">Login</Button></Link>
-              <Link to="/signup"><Button variant="outline">Signup</Button></Link>
+        // Clear token from localStorage
+        localStorage.removeItem("authToken");
+    };
+
+    return (
+        <div className="bg-white">
+            <div className="flex items-center justify-between mx-auto max-w-7xl h-16">
+                <div>
+                    <h1 className="text-2xl font-bold">Side Gig Search</h1>
+                </div>
+                <div className="flex items-center gap-10">
+                    <ul className="flex font-medium items-center gap-5 ">
+                        {
+                            user && user.role == "ADMIN" ? (
+                                <>
+                                    <link to="/admin/jobs">jobs</link>
+                                </>
+                            ) : (
+                                <>
+                                    <Link to="/"><li>Home</li></Link>
+                                    <Link to="/jobs"><li>Jobs</li></Link>
+                                    <li>Browse</li>
+                                </>
+                            )
+                        }
+
+                    </ul>
+                    {!token ? (
+                        <div className="flex gap-1">
+                            <Link to="/signin"><Button variant="outline">Login</Button></Link>
+                            <Link to="/signup"><Button variant="outline">Signup</Button></Link>
+                        </div>
+                    ) : (
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Avatar>
+                                    <AvatarImage src="https://github.com/shadcn.png" />
+                                    <AvatarFallback>{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
+                                </Avatar>
+                            </PopoverTrigger>
+                            <PopoverContent>
+                                <div className="flex justify-center font-bold">
+                                    {user?.name || "User"}
+                                </div>
+                                <div className="flex items-center">
+                                    <User2 />
+                                    <Button variant="link" className="font-bold"> <Link to="/profile">View Profile</Link></Button>
+                                </div>
+                                <div className="flex items-center">
+                                    <LogOut />
+                                    <Button variant="link" className="font-bold" onClick={handleLogout}>Logout</Button>
+                                </div>
+                            </PopoverContent>
+                        </Popover>
+                    )}
+                </div>
             </div>
-          ) : (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
-                </Avatar>
-              </PopoverTrigger>
-              <PopoverContent>
-                <div className="flex justify-center font-bold">
-                  {user?.name || "User"}
-                </div>
-                <div className="flex items-center">
-                  <User2 />
-                  <Button variant="link" className="font-bold"> <Link to ="/profile">View Profile</Link></Button>
-                </div>
-                <div className="flex items-center">
-                  <LogOut />
-                  <Button variant="link" className="font-bold" onClick={handleLogout}>Logout</Button>
-                </div>
-              </PopoverContent>
-            </Popover>
-          )}
         </div>
-      </div>
-    </div>
-  );
+    );
 }
