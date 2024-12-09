@@ -1,9 +1,13 @@
+import Jobs from "@/components/Jobs";
+import Category from "./Category";
 import Navbar from "./shared/Navebar";
 
 export default function Home(){
     return(
-        <div>
+        <div >
             <Navbar></Navbar>
+            <Category></Category>
+            <Jobs/>
         </div>
     )
 }
