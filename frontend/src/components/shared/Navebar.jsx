@@ -53,7 +53,7 @@ export default function Navbar() {
                 </div>
                 <div className="flex items-center">
                   <User2 />
-                  <Button variant="link" className="font-bold">View Profile</Button>
+                  <Button variant="link" className="font-bold"> <Link to ="/profile">View Profile</Link></Button>
                 </div>
                 <div className="flex items-center">
                   <LogOut />
