@@ -8,7 +8,7 @@ export default function Jobs() {
         <div className="max-w-7xl mx-auto mt-5">
             <div className="flex gap-5">
                 <div className="w-20%">
-
+                    
                 </div>
 
                 {
