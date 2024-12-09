@@ -1,8 +1,11 @@
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { useNavigate } from "react-router-dom";
 
 export default function JobCard() {
+    const navigate = useNavigate()
+    const jobId = "1"
     return (
         <div className="p-5 rounded-md shadow-xl bg-white border border-gray-100">
             <p>2 days ago</p>
@@ -36,7 +39,7 @@ export default function JobCard() {
             </div>
 
             <div className="flex items-center gap-3 mt-3">
-                <Button variant="outline">Details</Button>
+                <Button onClick = {()=> navigate( `/jobdescription/${jobId}`)} variant="outline">Details</Button>
                 <Button variant="default">Apply</Button>
             </div>
         </div>

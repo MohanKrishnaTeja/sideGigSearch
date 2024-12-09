@@ -4,6 +4,7 @@ import Navbar from "./shared/Navebar";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import AppliedJobs from "./AppliedJobs";
 
 const skillsArray = ["frontend", 'backend', 'fullstack']
 
@@ -12,7 +13,7 @@ export default function Profile() {
     return (
         <div>
             <Navbar />
-            <div className="max-w-7xl mx-auto bg-white border border-gray-300 rounded-xl my-5 p-6">
+            <div className="max-w-4xl mx-auto bg-white border border-gray-300 rounded-xl my-5 p-6">
                 <div className="flex justify-between">
                     <div className="flex items-center ">
                         <Avatar>
@@ -47,11 +48,12 @@ export default function Profile() {
 
                 </div>
 
-                <div>
-                    <h1>Applied Jobs</h1>
-                    
-                </div>
+                
             </div>
+            <div className="max-w-4xl  mx-auto  bg-white rounded-2xl ">
+                    <h1 className="font-bold mx-2">Applied Jobs</h1>
+                    <AppliedJobs/>
+                </div>
         </div>
     )
 }
