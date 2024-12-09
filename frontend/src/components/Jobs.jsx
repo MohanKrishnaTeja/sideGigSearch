@@ -1,5 +1,6 @@
 import JobCard from "@/components/JobCard";
 import Navbar from "./shared/Navebar";
+import FilterCard from "./FilterCard";
 
 const jobArray = ["1", "2", "3", "4", "5"]
 
@@ -8,7 +9,7 @@ export default function Jobs() {
         <div className="max-w-7xl mx-auto mt-5">
             <div className="flex gap-5">
                 <div className="w-20%">
-                    
+                    <FilterCard/>
                 </div>
 
                 {

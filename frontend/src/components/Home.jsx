@@ -6,7 +6,7 @@ export default function Home(){
     return(
         <div >
             <Navbar></Navbar>
-            <Category></Category>
+            
             <Jobs/>
         </div>
     )
