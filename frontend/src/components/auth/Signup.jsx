@@ -52,7 +52,7 @@ export default function Signup() {
                 placeholder="Mohan"
                 value={formData.fullName}
                 onChange={handleChange}
-                className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+                className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
               />
             </div>
             <div>
@@ -65,7 +65,7 @@ export default function Signup() {
                 placeholder="mohan@email.com"
                 value={formData.email}
                 onChange={handleChange}
-                className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+                className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
               />
             </div>
             <div>
@@ -75,10 +75,10 @@ export default function Signup() {
               <Input
                 type="password"
                 name="password"
-                placeholder="••••••••"
+                placeholder=""
                 value={formData.password}
                 onChange={handleChange}
-                className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+                className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
               />
             </div>
             <RadioGroup
@@ -101,7 +101,7 @@ export default function Signup() {
             </RadioGroup>
             <Button
               type="submit"
-              className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="w-full py-2 px-4  text-white font-semibold rounded-md  focus:outline-none focus:ring-2 "
             >
               Signup
             </Button>
