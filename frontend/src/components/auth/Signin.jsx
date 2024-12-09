@@ -14,8 +14,8 @@ export default function Signin() {
     password: "",
   });
 
-  const navigate = useNavigate(); // Initialize useNavigate
-  const dispatch = useDispatch(); // Initialize useDispatch
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,16 +27,20 @@ export default function Signin() {
     try {
       const res = await axios.post("http://localhost:5000/signin", formData);
 
-      alert(res.data.msg); // Display the response message
+      console.log(res.data); // Log the response to verify the structure
 
-      // Save token and user data in Redux store
-      dispatch(setToken(res.data.token)); // Dispatch setToken action
-      dispatch(setUser(res.data.user)); // Dispatch setUser action
+      // Alert the user with the response message
+      alert(res.data.msg);
+
+      // Dispatch actions to Redux to store token and user info
+      dispatch(setToken(res.data.token));
+      dispatch(setUser(res.data.user));  // Store the full user object
 
       // Optionally store the token in localStorage for persistence
       localStorage.setItem("authToken", res.data.token);
 
-      navigate("/"); // Navigate to the home page
+      // Navigate to the home page after login
+      navigate("/"); 
     } catch (error) {
       alert(error.response?.data?.msg || "Signin failed");
     }
@@ -80,7 +84,7 @@ export default function Signin() {
             <div>
               <Button
                 type="submit"
-                className="w-full py-2 px-4  text-white font-semibold rounded-md  focus:outline-none focus:ring-2 "
+                className="w-full py-2 px-4 text-white font-semibold rounded-md focus:outline-none focus:ring-2"
               >
                 Sign In
               </Button>
