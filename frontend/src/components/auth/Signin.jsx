@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useDispatch } from "react-redux"; // Import useDispatch
+import { setToken, setUser } from "../../redux/authSlice"; // Import Redux actions
 import Navbar from "../shared/Navebar";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -13,6 +15,7 @@ export default function Signin() {
   });
 
   const navigate = useNavigate(); // Initialize useNavigate
+  const dispatch = useDispatch(); // Initialize useDispatch
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,8 +26,16 @@ export default function Signin() {
     e.preventDefault();
     try {
       const res = await axios.post("http://localhost:5000/signin", formData);
+
       alert(res.data.msg); // Display the response message
-      localStorage.setItem("token", res.data.token); // Save token to localStorage
+
+      // Save token and user data in Redux store
+      dispatch(setToken(res.data.token)); // Dispatch setToken action
+      dispatch(setUser(res.data.user)); // Dispatch setUser action
+
+      // Optionally store the token in localStorage for persistence
+      localStorage.setItem("authToken", res.data.token);
+
       navigate("/"); // Navigate to the home page
     } catch (error) {
       alert(error.response?.data?.msg || "Signin failed");
@@ -60,7 +71,7 @@ export default function Signin() {
               <Input
                 type="password"
                 name="password"
-                placeholder="••••••••"
+                placeholder=""
                 value={formData.password}
                 onChange={handleChange}
                 className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
