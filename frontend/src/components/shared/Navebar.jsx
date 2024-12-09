@@ -3,22 +3,18 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "../ui/button";
 import { LogOut, User2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux"; // Import hooks from Redux
-import { setToken, setUser } from "../../redux/authSlice"; // Import actions
+import { useSelector, useDispatch } from "react-redux";
+import { setToken, setUser } from "../../redux/authSlice";
 
 export default function Navbar() {
     const dispatch = useDispatch();
 
-    // Access token from Redux store
     const token = useSelector((state) => state.auth.token);
     const user = useSelector((state) => state.auth.User);
 
     const handleLogout = () => {
-        // Clear token and user details
         dispatch(setToken(null));
         dispatch(setUser(null));
-
-        // Clear token from localStorage
         localStorage.removeItem("authToken");
     };
 
@@ -29,21 +25,18 @@ export default function Navbar() {
                     <h1 className="text-2xl font-bold">Side Gig Search</h1>
                 </div>
                 <div className="flex items-center gap-10">
-                    <ul className="flex font-medium items-center gap-5 ">
-                        {
-                            user && user.role == "ADMIN" ? (
-                                <>
-                                    <link to="/admin/jobs">jobs</link>
-                                </>
-                            ) : (
-                                <>
-                                    <Link to="/"><li>Home</li></Link>
-                                    <Link to="/jobs"><li>Jobs</li></Link>
-                                    <li>Browse</li>
-                                </>
-                            )
-                        }
-
+                    <ul className="flex font-medium items-center gap-5">
+                        {user && user.role === "ADMIN" ? (
+                            <>
+                                <Link to="/admin/jobs">Jobs</Link>
+                            </>
+                        ) : (
+                            <>
+                                <Link to="/"><li>Home</li></Link>
+                                <Link to="/jobs"><li>Jobs</li></Link>
+                                <li>Browse</li>
+                            </>
+                        )}
                     </ul>
                     {!token ? (
                         <div className="flex gap-1">
@@ -55,20 +48,32 @@ export default function Navbar() {
                             <PopoverTrigger asChild>
                                 <Avatar>
                                     <AvatarImage src="https://github.com/shadcn.png" />
-                                    <AvatarFallback>{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
+                                    <AvatarFallback>
+                                        {user?.name?.charAt(0).toUpperCase() || "U"}
+                                    </AvatarFallback>
                                 </Avatar>
                             </PopoverTrigger>
                             <PopoverContent>
-                                <div className="flex justify-center font-bold">
+                                <div className="flex justify-center font-bold mb-2">
                                     {user?.name || "User"}
                                 </div>
-                                <div className="flex items-center">
-                                    <User2 />
-                                    <Button variant="link" className="font-bold"> <Link to="/profile">View Profile</Link></Button>
-                                </div>
-                                <div className="flex items-center">
+                                {user?.role === "STUDENT" && (
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <User2 />
+                                        <Button variant="link" className="font-bold">
+                                            <Link to="/profile">View Profile</Link>
+                                        </Button>
+                                    </div>
+                                )}
+                                <div className="flex items-center gap-2">
                                     <LogOut />
-                                    <Button variant="link" className="font-bold" onClick={handleLogout}>Logout</Button>
+                                    <Button
+                                        variant="link"
+                                        className="font-bold"
+                                        onClick={handleLogout}
+                                    >
+                                        Logout
+                                    </Button>
                                 </div>
                             </PopoverContent>
                         </Popover>
