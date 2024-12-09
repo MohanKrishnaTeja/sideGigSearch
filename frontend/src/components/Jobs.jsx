@@ -1,4 +1,4 @@
-import Job from "@/Job";
+import JobCard from "@/components/JobCard";
 import Navbar from "./shared/Navebar";
 
 const jobArray = ["1", "2", "3", "4", "5"]
@@ -18,7 +18,7 @@ export default function Jobs() {
                                 {
                                     jobArray.map((item,index)=>(
                                         <div>
-                                            <Job/>
+                                            <JobCard/>
                                         </div>
                                     ))
                                 }
