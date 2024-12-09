@@ -7,7 +7,10 @@ const authorizeRoles = require('../middleware/authorizeRoles');
 
 // 1. Post a Job (Only Admin)
 router.post('/jobs', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
-  const { title, description, requirements, salary, location, noOfHours, positions } = req.body;
+  const { title, description, requirements, salary, location, noOfHours, positions, componyLogo } = req.body;
+
+  
+  const logo = componyLogo || ""; 
 
   try {
     const job = await prisma.job.create({
@@ -18,6 +21,7 @@ router.post('/jobs', authenticateToken, authorizeRoles('ADMIN'), async (req, res
         location,
         noOfHours,
         positions,
+        componyLogo: logo, // Save the componyLogo value
         createdById: req.user.id,
         requirements: {
           connect: requirements.map(skillId => ({ id: skillId })),
@@ -29,6 +33,7 @@ router.post('/jobs', authenticateToken, authorizeRoles('ADMIN'), async (req, res
     res.status(500).json({ msg: 'Error posting job', error: err.message });
   }
 });
+
 
 // 2. Get All Jobs (Anyone can access)
 router.get('/jobs', async (req, res) => {

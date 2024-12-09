@@ -66,6 +66,7 @@ model Skill {
 
 model Job {
   id               Int           @id @default(autoincrement())
+  componyLogo      String         @default("")
   title            String
   description      String
   requirements     Skill[]       @relation("JobRequirements")
