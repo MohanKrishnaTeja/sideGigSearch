@@ -30,7 +30,7 @@ const appRouter = createBrowserRouter([
     element : <Profile/>
   },{
     path : '/jobdescription/:id',
-    element : <JobDescription/>
+    element : <JobDescription />
   },{
     path : '/admin/jobs',
     element : <AdminHome/>

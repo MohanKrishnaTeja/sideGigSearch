@@ -1,66 +1,84 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom"; // Import useParams to access route parameters
 import Navbar from "./shared/Navebar";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 
 export default function JobDescription() {
-    const isApplied = false;
+  const { id } = useParams(); // Extract jobId from the route params
+  const [job, setJob] = useState(null);
+  const [isApplied, setIsApplied] = useState(false);
 
-    return (
-        <div>
-            <Navbar />
-            <div className="max-w-7xl mx-auto bg-white my-10 p-6 rounded-lg shadow-md border border-gray-200">
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <h1 className="font-bold text-2xl text-gray-800">Job Title</h1>
-                        <div className="flex items-center gap-3 mt-2">
-                            <Badge className="font-bold" variant="ghost">10 positions</Badge>
-                            <Badge className="font-bold" variant="ghost">Part Time</Badge>
-                            <Badge className="font-bold" variant="ghost">10 LPA</Badge>
-                        </div>
-                    </div>
-                    <Button
-                        className={`py-2 px-6 ${isApplied ? "bg-gray-400 text-white" : "bg-black text-white"} `}
-                        disabled={isApplied}
-                    >
-                        {isApplied ? "Already Applied" : "Apply Now"}
-                    </Button>
-                </div>
+  useEffect(() => {
+    async function fetchJob() {
+      try {
+        const response = await fetch(`http://localhost:5000/jobs/${id}`); // Use the jobId in the API call
+        if (!response.ok) throw new Error("Error fetching job details");
+        const data = await response.json();
+        setJob(data);
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
 
-                <h1 className="font-bold text-lg text-gray-700 border-b border-gray-300 pb-2">Job Description</h1>
-                <div className="my-6 space-y-4 text-gray-600">
-                    <div className="flex items-center">
-                        <h1 className="font-bold text-gray-700">Role:</h1>
-                        <p className="ml-2">Frontend Developer</p>
-                    </div>
-                    <div className="flex items-center">
-                        <h1 className="font-bold text-gray-700">Location:</h1>
-                        <p className="ml-2">Hyderabad, India</p>
-                    </div>
-                    <div className="flex items-center">
-                        <h1 className="font-bold text-gray-700">Experience Required:</h1>
-                        <p className="ml-2">2-5 years</p>
-                    </div>
-                    <div className="flex items-center">
-                        <h1 className="font-bold text-gray-700">Salary:</h1>
-                        <p className="ml-2">10-15 LPA</p>
-                    </div>
-                    <div className="flex items-center">
-                        <h1 className="font-bold text-gray-700">Applicants:</h1>
-                        <p className="ml-2">25 applicants so far</p>
-                    </div>
-                    <div className="flex items-center">
-                        <h1 className="font-bold text-gray-700">Posted:</h1>
-                        <p className="ml-2">2 days ago</p>
-                    </div>
-                </div>
+    fetchJob();
+  }, [id]); // Trigger useEffect when jobId changes
 
-                <h1 className="font-bold text-lg text-gray-700 border-b border-gray-300 pb-2">About the Job</h1>
-                <p className="mt-4 text-gray-600 leading-relaxed">
-                    We are looking for a talented Frontend Developer to join our team. You will work on cutting-edge web
-                    technologies and contribute to building user-friendly applications. The ideal candidate should be
-                    proficient in React.js and have a good understanding of modern development workflows.
-                </p>
-            </div>
+  if (!job) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div>
+    <Navbar />
+    <div className="max-w-7xl mx-auto bg-white my-10 p-8 rounded-xl shadow-lg border border-gray-200">
+      {/* Job Title and Info Section */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
+        <div className="flex flex-col space-y-2 md:space-y-4">
+          <h1 className="text-3xl font-bold text-gray-800">{job.title}</h1>
+          <div className="flex flex-wrap gap-3">
+            <Badge className="font-semibold text-sm" variant="ghost">
+              {job.positions} positions
+            </Badge>
+            <Badge className="font-semibold text-sm" variant="ghost">
+              {job.noOfHours} Hours
+            </Badge>
+            <Badge className="font-semibold text-sm" variant="ghost">
+              {job.salary} LPA
+            </Badge>
+          </div>
         </div>
-    );
+        <Button
+          className={`py-3 px-8 ${isApplied ? "bg-gray-400 text-white" : "bg-black text-white hover:bg-gray-800"}`}
+          disabled={isApplied}
+        >
+          {isApplied ? "Already Applied" : "Apply Now"}
+        </Button>
+      </div>
+
+      {/* Job Description */}
+      <div>
+        <h2 className="font-bold text-xl text-gray-700 border-b-2 pb-2 mb-4">Job Description</h2>
+        <p className="text-lg text-gray-600 leading-relaxed">{job.description}</p>
+      </div>
+
+      {/* Requirements Section */}
+      <div className="mt-8">
+        <h2 className="font-bold text-xl text-gray-700 border-b-2 pb-2 mb-4">Requirements</h2>
+        <ul className="space-y-2 text-lg text-gray-600 list-disc list-inside">
+          {job.requirements.map((req) => (
+            <li key={req.id}>{req.name}</li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Additional Info */}
+      <div className="mt-8">
+        <h2 className="font-bold text-xl text-gray-700 border-b-2 pb-2 mb-4">Additional Info</h2>
+        <p className="text-lg text-gray-600">Location: <span className="font-semibold">{job.location}</span></p>
+        <p className="text-lg text-gray-600 mt-2">Posted by: <span className="font-semibold">{job.createdBy.fullName}</span></p>
+      </div>
+    </div>
+  </div>
+  );
 }

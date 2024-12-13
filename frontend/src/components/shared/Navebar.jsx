@@ -37,7 +37,7 @@ export default function Navbar() {
                                 <Link to="/jobs">
                                     <li className="hover:text-indigo-600 transition-colors">Jobs</li>
                                 </Link>
-                                <li className="hover:text-indigo-600 transition-colors">Browse</li>
+                               { /*<li className="hover:text-indigo-600 transition-colors">Browse</li>*/}
                             </>
                         )}
                     </ul>
