@@ -75,4 +75,33 @@ router.get('/admin/jobs', authenticateToken, authorizeRoles('ADMIN'), async (req
   }
 });
 
+// 4. Get Job by ID (Anyone can access)
+router.get('/jobs/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const job = await prisma.job.findUnique({
+      where: { id: parseInt(id) },
+      include: {
+        requirements: true, // Includes the skills required for the job
+        createdBy: {
+          select: { fullName: true }, // Include admin's name who created the job
+        },
+        applications: {
+          select: { id: true, status: true, applicant: { select: { fullName: true } } }, // Include application info
+        },
+      },
+    });
+
+    if (!job) {
+      return res.status(404).json({ msg: 'Job not found' });
+    }
+
+    res.status(200).json(job);
+  } catch (err) {
+    res.status(500).json({ msg: 'Error fetching job details', error: err.message });
+  }
+});
+
+
 module.exports = router;
