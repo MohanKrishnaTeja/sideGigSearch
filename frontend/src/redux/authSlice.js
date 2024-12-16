@@ -14,6 +14,7 @@ const authSlice = createSlice({
       state.token = action.payload;  // Store the token
     },
     setUser: (state, action) => {
+      console.log("Setting user:", action.payload);
       state.User = action.payload;  // Store the user data
     },
     clearAuth: (state) => {
