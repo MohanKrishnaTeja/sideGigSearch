@@ -44,7 +44,7 @@ model Profile {
   id                 Int      @id @default(autoincrement())
   bio                String?
   phoneNumber        String
-  resume             String       // URL of the resume file
+  resume             String       @default("")
   resumeOriginalName String
   company            String
   profilePhoto       String       @default("")
