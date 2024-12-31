@@ -9,31 +9,28 @@ const authorizeRoles = require('../middleware/authorizeRoles');
 router.post('/jobs', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
   const { title, description, requirements, salary, location, noOfHours, positions, componyLogo } = req.body;
 
-  
-  const logo = componyLogo || ""; 
-
   try {
     const job = await prisma.job.create({
       data: {
         title,
         description,
-        salary,
+        salary: parseFloat(salary),
         location,
-        noOfHours,
-        positions,
-        componyLogo: logo, // Save the componyLogo value
+        noOfHours: parseInt(noOfHours),
+        positions: parseInt(positions),
+        componyLogo: componyLogo || "", // Save the componyLogo value
         createdById: req.user.id,
         requirements: {
-          connect: requirements.map(skillId => ({ id: skillId })),
+          connect: requirements.map(skillId => ({ id: parseInt(skillId) })),
         },
       },
     });
     res.status(201).json({ msg: 'Job posted successfully', job });
   } catch (err) {
+    console.error("Error posting job:", err);
     res.status(500).json({ msg: 'Error posting job', error: err.message });
   }
 });
-
 
 // 2. Get All Jobs (Anyone can access)
 router.get('/jobs', async (req, res) => {
@@ -75,7 +72,6 @@ router.get('/admin/jobs', authenticateToken, authorizeRoles('ADMIN'), async (req
   }
 });
 
-
 // 4. Get Job by ID (Anyone can access)
 router.get('/jobs/:id', async (req, res) => {
   const { id } = req.params;
@@ -105,7 +101,5 @@ router.get('/jobs/:id', async (req, res) => {
     res.status(500).json({ msg: 'Error fetching job details', error: err.message });
   }
 });
-
-
 
 module.exports = router;

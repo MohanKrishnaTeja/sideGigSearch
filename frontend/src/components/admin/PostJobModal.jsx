@@ -1,41 +1,61 @@
 import { useState } from "react";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
-const PostJobModal = () => {
+const PostJobModal = ({ isOpen, onClose, onJobPosted }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [requirements, setRequirements] = useState("");
     const [salary, setSalary] = useState("");
     const [location, setLocation] = useState("");
+    const [noOfHours, setNoOfHours] = useState("");
     const [positions, setPositions] = useState("");
+    const [componyLogo, setComponyLogo] = useState("");
+    const token = useSelector((state) => state.auth.token);
 
-    const handleSubmit = () => {
-        // Dummy backend handling
-        console.log("Job submitted:", {
+    const handleSubmit = async () => {
+        const jobData = {
             title,
             description,
-            requirements,
+            requirements: requirements.split(",").map(req => req.trim()), // Convert requirements to array
             salary,
             location,
+            noOfHours,
             positions,
-        });
-        // Clear the form after submission
-        setTitle("");
-        setDescription("");
-        setRequirements("");
-        setSalary("");
-        setLocation("");
-        setPositions("");
+            componyLogo,
+        };
+
+        try {
+            const response = await axios.post("http://localhost:5000/jobs", jobData, {
+                headers: {
+                    Authorization: `${token}`,
+                },
+            });
+
+            alert(`Job submitted successfully: ${response.data.job.title}`);
+            // Clear the form after submission
+            setTitle("");
+            setDescription("");
+            setRequirements("");
+            setSalary("");
+            setLocation("");
+            setNoOfHours("");
+            setPositions("");
+            setComponyLogo("");
+            onClose();
+            onJobPosted(); // Notify parent component to refresh the jobs table
+        } catch (err) {
+            alert(`Error posting job: ${err.response?.data?.msg || err.message}`);
+            console.error("Error posting job:", err);
+        }
     };
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button variant="default">Post a Job</Button>
-            </DialogTrigger>
+        <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent>
                 <DialogTitle>Post a New Job</DialogTitle>
                 <div className="flex flex-col gap-4">
@@ -65,9 +85,19 @@ const PostJobModal = () => {
                         onChange={(e) => setLocation(e.target.value)}
                     />
                     <Input
+                        placeholder="Number of Hours"
+                        value={noOfHours}
+                        onChange={(e) => setNoOfHours(e.target.value)}
+                    />
+                    <Input
                         placeholder="Number of Positions"
                         value={positions}
                         onChange={(e) => setPositions(e.target.value)}
+                    />
+                    <Input
+                        placeholder="Company Logo URL"
+                        value={componyLogo}
+                        onChange={(e) => setComponyLogo(e.target.value)}
                     />
                 </div>
                 <DialogFooter>

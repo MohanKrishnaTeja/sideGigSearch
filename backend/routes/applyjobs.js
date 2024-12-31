@@ -72,6 +72,25 @@ router.get('/applied-jobs', authenticateToken, async (req, res) => {
   }
 });
 
+// Get all jobs posted by the logged-in admin
+router.get('/admin/jobs', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
+  const adminId = req.user.id; // Assuming `req.user.id` is the admin's ID
+
+  try {
+      const jobs = await prisma.job.findMany({
+          where: { createdById: adminId }, // Only fetch jobs created by the admin
+          include: {
+              applications: true, // Include related applications if needed
+          },
+      });
+
+      res.status(200).json({ jobs });
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ msg: 'Failed to fetch jobs', error: err.message });
+  }
+});
+
 // Get applicants for a specific job (Only Admin can access this)
 router.get('/job/:jobId/applicants', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
   const jobId = parseInt(req.params.jobId);

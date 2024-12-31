@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -44,17 +41,16 @@ model Profile {
   id                 Int      @id @default(autoincrement())
   bio                String?
   phoneNumber        String
-  resume             String       @default("")
+  resume             Bytes
   resumeOriginalName String
   company            String
-  profilePhoto       String       @default("")
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
+  profilePhoto       Bytes
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
-  userId             Int        @unique // Each profile belongs to one user
-  user               User       @relation(fields: [userId], references: [id])
+  userId             Int       @unique // Each profile belongs to one user
+  user               User      @relation(fields: [userId], references: [id])
 }
-
 
 model Skill {
   id               Int           @id @default(autoincrement())
@@ -63,6 +59,7 @@ model Skill {
   users            User[]        @relation("UserSkills")
   jobRequirements  Job[]         @relation("JobRequirements")
 }
+
 
 model Job {
   id               Int           @id @default(autoincrement())

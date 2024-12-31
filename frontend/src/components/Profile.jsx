@@ -6,7 +6,6 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import AppliedJobs from "./AppliedJobs";
 import { useSelector } from "react-redux";
-import UpdatePrifileDailog from "./UpdateProfileDialog";
 import axios from "axios"; // For making API calls
 
 export default function Profile() {
@@ -23,7 +22,7 @@ export default function Profile() {
             try {
                 const response = await axios.get("http://localhost:5000/profile", {
                     headers: {
-                        Authorization: `${token}`, // Include token if required
+                        Authorization: `Bearer ${token}`, // Include token if required
                     },
                 });
 
@@ -35,7 +34,30 @@ export default function Profile() {
         };
 
         fetchProfile();
-    }, []);
+    }, [token]);
+
+    const handleProfileUpdate = async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+
+        try {
+            const response = await axios.put("http://localhost:5000/profile", formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            setProfileData(response.data.profile);
+            setOpen(false);
+        } catch (err) {
+            console.error("Error updating profile:", err);
+        }
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     return (
         <div>
@@ -53,7 +75,6 @@ export default function Profile() {
                         <div>
                             <h1 className="font-bold text-xl text-black">
                                 {fullName}
-
                             </h1>
                             <p className="text-gray-600 text-sm mt-2">
                                 {profileData?.bio || "No bio available"}
@@ -74,7 +95,6 @@ export default function Profile() {
                     <div className="flex items-center gap-3 my-3">
                         <Mail className="h-5 w-5 text-black" />
                         <h1 className="text-black text-sm">
-
                             {profileData?.email || email}
                         </h1>
                     </div>
@@ -110,7 +130,67 @@ export default function Profile() {
             <div className="max-w-4xl mx-auto bg-white border border-gray-300 rounded-xl shadow-md p-6">
                 <AppliedJobs />
             </div>
-            <UpdatePrifileDailog open={open} setOpen={setOpen} />
+
+            {/* Update Profile Dialog */}
+            {open && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={handleClose}>
+                    <div className="bg-white p-6 rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()}>
+                        <h2 className="text-xl font-bold mb-4">Update Profile</h2>
+                        <form onSubmit={handleProfileUpdate}>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Bio</label>
+                                <textarea
+                                    name="bio"
+                                    defaultValue={profileData?.bio}
+                                    className="w-full border border-gray-300 rounded-md p-2"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Phone Number</label>
+                                <input
+                                    type="text"
+                                    name="phoneNumber"
+                                    defaultValue={profileData?.phoneNumber}
+                                    className="w-full border border-gray-300 rounded-md p-2"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Company</label>
+                                <input
+                                    type="text"
+                                    name="company"
+                                    defaultValue={profileData?.company}
+                                    className="w-full border border-gray-300 rounded-md p-2"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Profile Photo</label>
+                                <input
+                                    type="file"
+                                    name="profilePhoto"
+                                    className="w-full border border-gray-300 rounded-md p-2"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Resume</label>
+                                <input
+                                    type="file"
+                                    name="resume"
+                                    className="w-full border border-gray-300 rounded-md p-2"
+                                />
+                            </div>
+                            <div className="flex justify-end">
+                                <Button type="button" onClick={handleClose} className="mr-2">
+                                    Cancel
+                                </Button>
+                                <Button type="submit" className="bg-blue-500 text-white">
+                                    Save
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

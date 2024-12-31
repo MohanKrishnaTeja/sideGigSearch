@@ -35,7 +35,7 @@ const appRouter = createBrowserRouter([
     path : '/admin/jobs',
     element : <AdminHome/>
   },{
-    path : 'adminjobdescription/:id',
+    path : '/adminjobdescription/:id',
     element : <AdminJobDescription/>
   }
 ])

@@ -1,35 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Navbar from "../shared/Navebar";
-
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 export default function AdminJobDescription() {
-    // Placeholder data for job description
-    const job = {
-        title: "Software Engineer",
-        description: "Build and maintain scalable applications.",
-        location: "Remote",
-        salary: "50,000",
-        positions: 2,
-        requirements: "JavaScript, React, Node.js",
-    };
+    const { id } = useParams(); // Get job ID from URL
+    const [job, setJob] = useState(null); // State to store job details
+    const [appliedUsers, setAppliedUsers] = useState([]); // State to store applied users
+    const token = useSelector((state) => state.auth.token); // Fetch token from Redux state
 
-    // Placeholder data for applied users
-    const appliedUsers = [
-        {
-            id: 1,
-            name: "John Doe",
-            email: "john.doe@example.com",
-            phone: "123-456-7890",
-            resume: "/path/to/resume1.pdf",
-        },
-        {
-            id: 2,
-            name: "Jane Smith",
-            email: "jane.smith@example.com",
-            phone: "987-654-3210",
-            resume: "/path/to/resume2.pdf",
-        },
-    ];
+    useEffect(() => {
+        const fetchJobDetails = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/jobs/${id}`, {
+                    headers: {
+                        Authorization: `${token}`,
+                    },
+                });
+                setJob(response.data); // Update state with job details
+                setAppliedUsers(response.data.applications || []); // Update state with applied users
+            } catch (err) {
+                console.error("Error fetching job details:", err);
+            }
+        };
+
+        if (id && token) {
+            fetchJobDetails();
+        }
+    }, [id, token]);
 
     const handleAction = (action, userId) => {
         if (action === "accept") {
@@ -40,6 +39,10 @@ export default function AdminJobDescription() {
             alert(`User with ID ${userId} rejected.`);
         }
     };
+
+    if (!job) {
+        return <div>Loading...</div>; // Show loading state
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -53,7 +56,7 @@ export default function AdminJobDescription() {
                     <p className="text-gray-600 mt-2"><strong>Location:</strong> {job.location}</p>
                     <p className="text-gray-600 mt-2"><strong>Salary:</strong> {job.salary}</p>
                     <p className="text-gray-600 mt-2"><strong>Positions Available:</strong> {job.positions}</p>
-                    <p className="text-gray-600 mt-2"><strong>Requirements:</strong> {job.requirements}</p>
+                    <p className="text-gray-600 mt-2"><strong>Requirements:</strong> {job.requirements.map(req => req.name).join(', ')}</p>
                 </div>
 
                 {/* Applied Users Table */}
@@ -70,25 +73,25 @@ export default function AdminJobDescription() {
                             </tr>
                         </thead>
                         <tbody>
-                            {appliedUsers.map((user) => (
-                                <tr key={user.id}>
-                                    <td className="border border-gray-300 px-4 py-2">{user.name}</td>
-                                    <td className="border border-gray-300 px-4 py-2">{user.email}</td>
-                                    <td className="border border-gray-300 px-4 py-2">{user.phone}</td>
+                            {appliedUsers.map((application) => (
+                                <tr key={application.id}>
+                                    <td className="border border-gray-300 px-4 py-2">{application.user.fullName}</td>
+                                    <td className="border border-gray-300 px-4 py-2">{application.user.email}</td>
+                                    <td className="border border-gray-300 px-4 py-2">{application.user.phoneNumber}</td>
                                     <td className="border border-gray-300 px-4 py-2">
-                                        <a href={user.resume} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                        <a href={`http://localhost:5000/uploads/${application.resume}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                                             View Resume
                                         </a>
                                     </td>
                                     <td className="border border-gray-300 px-4 py-2">
                                         <button
-                                            onClick={() => handleAction("accept", user.id)}
+                                            onClick={() => handleAction("accept", application.user.id)}
                                             className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 mr-2"
                                         >
                                             Accept
                                         </button>
                                         <button
-                                            onClick={() => handleAction("reject", user.id)}
+                                            onClick={() => handleAction("reject", application.user.id)}
                                             className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
                                         >
                                             Reject
