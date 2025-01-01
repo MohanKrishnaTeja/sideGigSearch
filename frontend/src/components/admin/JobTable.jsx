@@ -70,10 +70,10 @@ export default function JobTable({ refresh }) {
                                 <td className="border border-gray-300 px-4 py-2">{job.salary}</td>
                                 <td className="border border-gray-300 px-4 py-2">{job.positions}</td>
                                 <td className="border border-gray-300 px-4 py-2">
-                                    {job.requirements && job.requirements.length > 0 ? (
+                                    {job.requirements ? (
                                         <ul>
-                                            {job.requirements.map((req) => (
-                                                <li key={req.id}>{req.name}</li>
+                                            {job.requirements.split(',').map((req, index) => (
+                                                <li key={index}>{req}</li>
                                             ))}
                                         </ul>
                                     ) : (

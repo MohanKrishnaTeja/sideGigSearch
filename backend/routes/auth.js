@@ -6,7 +6,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 router.post('/signup', async (req, res) => {
-    const { fullName, email, password, role = "USER" } = req.body;
+    const { fullName, email, password, role = "USER", bio, phoneNumber, experience, skills } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
@@ -15,11 +15,23 @@ router.post('/signup', async (req, res) => {
                 fullName,
                 email,
                 password: hashedPassword,
-                role
+                role,
+                bio,
+                phoneNumber,
+                experience,
+                skills
             }
         });
+
+        const token = jwt.sign({
+            id: user.id,
+            role: user.role,
+            email: user.email
+        }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
         res.status(201).json({
             msg: "User created successfully",
+            token,
             user
         });
     } catch (error) {

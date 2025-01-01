@@ -21,18 +21,18 @@ const PostJobModal = ({ isOpen, onClose, onJobPosted }) => {
         const jobData = {
             title,
             description,
-            requirements: requirements.split(",").map(req => req.trim()), // Convert requirements to array
-            salary,
+            requirements, // Store requirements as a comma-separated string
+            salary: parseFloat(salary),
             location,
-            noOfHours,
-            positions,
+            noOfHours: parseInt(noOfHours),
+            positions: parseInt(positions),
             componyLogo,
         };
 
         try {
             const response = await axios.post("http://localhost:5000/jobs", jobData, {
                 headers: {
-                    Authorization: `${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
 

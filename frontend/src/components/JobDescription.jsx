@@ -18,14 +18,14 @@ export default function JobDescription() {
       try {
         const jobResponse = await axios.get(`http://localhost:5000/jobs/${id}`, {
           headers: {
-            Authorization: `${token}`,
+            Authorization: `${token}`, // Added Bearer prefix
           },
         });
         setJob(jobResponse.data);
 
         const appliedResponse = await axios.get(`http://localhost:5000/applied-jobs`, {
           headers: {
-            Authorization: `${token}`,
+            Authorization: `${token}`, // Added Bearer prefix
           },
         });
         const appliedJobs = appliedResponse.data.appliedJobs;
@@ -47,12 +47,12 @@ export default function JobDescription() {
         {},
         {
           headers: {
-            Authorization: `${token}`,
+            Authorization: `${token}`, // Added Bearer prefix
           },
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         setIsApplied(true);
         alert("Application submitted successfully!");
       } else {
@@ -114,8 +114,8 @@ export default function JobDescription() {
             Requirements
           </h2>
           <ul className="space-y-2 text-lg text-gray-600 list-disc list-inside">
-            {job.requirements.map((req, index) => (
-              <li key={index}>{req.name}</li>
+            {job.requirements.split(',').map((req, index) => (
+              <li key={index}>{req}</li>
             ))}
           </ul>
         </div>

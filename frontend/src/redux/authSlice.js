@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // Initial state structure
 const initialState = {
   token: null,
-  User: null,
+  user: null, // Corrected the case to match the usage in components
 };
 
 const authSlice = createSlice({
@@ -15,11 +15,11 @@ const authSlice = createSlice({
     },
     setUser: (state, action) => {
       console.log("Setting user:", action.payload);
-      state.User = action.payload;  // Store the user data
+      state.user = action.payload;  // Store the user data
     },
     clearAuth: (state) => {
       state.token = null;
-      state.User = null;
+      state.user = null;
     },
   },
 });
@@ -27,4 +27,3 @@ const authSlice = createSlice({
 export const { setToken, setUser, clearAuth } = authSlice.actions;
 
 export default authSlice.reducer;
-

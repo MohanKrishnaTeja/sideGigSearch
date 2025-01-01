@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-export default function UpdateProfileDialog({ open, setOpen }) {
+export default function UpdateProfileDialog({ open, setOpen, onProfileUpdate }) {
   const [formData, setFormData] = useState({
     bio: "",
     phoneNumber: "",
@@ -82,7 +82,7 @@ export default function UpdateProfileDialog({ open, setOpen }) {
           });
 
       alert(response.data.msg);
-      setOpen(false);
+      onProfileUpdate(response.data.profile);
     } catch (error) {
       console.error("Error creating or updating profile:", error);
       alert(error.response?.data?.msg || "Error creating or updating profile");
