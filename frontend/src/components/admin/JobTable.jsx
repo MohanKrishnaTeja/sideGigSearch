@@ -32,7 +32,7 @@ export default function JobTable({ refresh }) {
             setError("User is not authenticated. Please log in.");
             setLoading(false);
         }
-    }, [token, refresh]); // Re-fetch jobs when token or refresh changes
+    }, [token, refresh]); 
 
     if (loading) {
         return <div>Loading...</div>;

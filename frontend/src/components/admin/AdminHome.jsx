@@ -9,7 +9,7 @@ export default function AdminHome() {
     const [refreshJobs, setRefreshJobs] = useState(false);
 
     const handleJobPosted = () => {
-        setRefreshJobs(!refreshJobs); // Toggle refresh state to trigger re-fetching jobs
+        setRefreshJobs(!refreshJobs); 
     };
 
     return (

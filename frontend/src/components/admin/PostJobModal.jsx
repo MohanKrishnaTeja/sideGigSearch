@@ -21,7 +21,7 @@ const PostJobModal = ({ isOpen, onClose, onJobPosted }) => {
         const jobData = {
             title,
             description,
-            requirements, // Store requirements as a comma-separated string
+            requirements,
             salary: parseFloat(salary),
             location,
             noOfHours: parseInt(noOfHours),
@@ -37,7 +37,6 @@ const PostJobModal = ({ isOpen, onClose, onJobPosted }) => {
             });
 
             alert(`Job submitted successfully: ${response.data.job.title}`);
-            // Clear the form after submission
             setTitle("");
             setDescription("");
             setRequirements("");
@@ -47,7 +46,7 @@ const PostJobModal = ({ isOpen, onClose, onJobPosted }) => {
             setPositions("");
             setComponyLogo("");
             onClose();
-            onJobPosted(); // Notify parent component to refresh the jobs table
+            onJobPosted();
         } catch (err) {
             alert(`Error posting job: ${err.response?.data?.msg || err.message}`);
             console.error("Error posting job:", err);

@@ -5,10 +5,10 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 export default function AdminJobDescription() {
-    const { id } = useParams(); // Get job ID from URL
-    const [job, setJob] = useState(null); // State to store job details
-    const [appliedUsers, setAppliedUsers] = useState([]); // State to store applied users
-    const token = useSelector((state) => state.auth.token); // Fetch token from Redux state
+    const { id } = useParams();
+    const [job, setJob] = useState(null);
+    const [appliedUsers, setAppliedUsers] = useState([]);
+    const token = useSelector((state) => state.auth.token);
 
     useEffect(() => {
         const fetchJobDetails = async () => {
@@ -18,9 +18,8 @@ export default function AdminJobDescription() {
                         Authorization: `${token}`,
                     },
                 });
-                setJob(response.data); // Update state with job details
+                setJob(response.data);
 
-                // Fetch user details for each application
                 const userDetailsPromises = response.data.applications.map(async (application) => {
                     const userResponse = await axios.get(`http://localhost:5000/profile/${application.userId}`, {
                         headers: {
@@ -31,7 +30,7 @@ export default function AdminJobDescription() {
                 });
 
                 const applicationsWithUserDetails = await Promise.all(userDetailsPromises);
-                setAppliedUsers(applicationsWithUserDetails); // Update state with applied users and their details
+                setAppliedUsers(applicationsWithUserDetails);
             } catch (err) {
                 console.error("Error fetching job details:", err);
             }
@@ -51,7 +50,6 @@ export default function AdminJobDescription() {
                 },
             });
 
-            // Update the application status in the state
             setAppliedUsers((prevUsers) =>
                 prevUsers.map((application) =>
                     application.id === applicationId ? { ...application, status: response.data.application.status } : application
@@ -66,7 +64,7 @@ export default function AdminJobDescription() {
     };
 
     if (!job) {
-        return <div>Loading...</div>; // Show loading state
+        return <div>Loading...</div>;
     }
 
     return (
@@ -74,7 +72,6 @@ export default function AdminJobDescription() {
             <Navbar />
 
             <div className="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
-                {/* Job Description Section */}
                 <div className="mb-6">
                     <h2 className="text-3xl font-semibold text-gray-800">{job.title}</h2>
                     <p className="text-gray-600 mt-2">{job.description}</p>
@@ -84,7 +81,6 @@ export default function AdminJobDescription() {
                     <p className="text-gray-600 mt-2"><strong>Requirements:</strong> {job.requirements}</p>
                 </div>
 
-                {/* Applied Users Table */}
                 <div className="mt-8">
                     <h3 className="text-2xl font-semibold text-gray-800 mb-4">Applied Users</h3>
                     <table className="table-auto w-full border-collapse border border-gray-300">
