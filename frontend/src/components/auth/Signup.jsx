@@ -33,17 +33,13 @@ export default function Signup() {
     try {
       const res = await axios.post("http://localhost:5000/signup", formData);
 
-      // Alert the user with the response message
       alert(res.data.msg);
 
-      // Dispatch actions to Redux to store token and user info
       dispatch(setToken(res.data.token));
-      dispatch(setUser(res.data.user));  // Store the full user object
+      dispatch(setUser(res.data.user));
 
-      // Optionally store the token in localStorage for persistence
       localStorage.setItem("authToken", res.data.token);
 
-      // Redirect to jobs page after successful sign-up
       navigate("/jobs");
     } catch (error) {
       alert(error.response?.data?.msg || "Signup failed");

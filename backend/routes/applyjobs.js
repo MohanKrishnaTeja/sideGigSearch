@@ -5,6 +5,8 @@ const authorizeRoles = require('../middleware/authorizeRoles');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+
+
 // Apply for a job route
 router.post('/apply/:jobId', authenticateToken, async (req, res) => {
   const jobId = parseInt(req.params.jobId);

@@ -26,19 +26,15 @@ export default function Signin() {
     try {
       const res = await axios.post("http://localhost:5000/signin", formData);
 
-      console.log(res.data); // Log the response to verify the structure
+      console.log(res.data);
 
-      // Alert the user with the response message
       alert(res.data.msg);
 
-      // Dispatch actions to Redux to store token and user info
       dispatch(setToken(res.data.token));
-      dispatch(setUser(res.data.user));  // Store the full user object
+      dispatch(setUser(res.data.user));
 
-      // Optionally store the token in localStorage for persistence
       localStorage.setItem("authToken", res.data.token);
 
-      // Navigate to jobs page after successful sign-in
       navigate("/jobs");
     } catch (error) {
       alert(error.response?.data?.msg || "Signin failed");
