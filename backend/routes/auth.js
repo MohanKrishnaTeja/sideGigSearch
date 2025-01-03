@@ -10,6 +10,18 @@ router.post('/signup', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
+        // Check if the user already exists
+        const existingUser = await prisma.user.findUnique({
+            where: { email }
+        });
+
+        if (existingUser) {
+            return res.status(400).json({
+                msg: "User already exists, please sign in"
+            });
+        }
+
+        // Create a new user
         const user = await prisma.user.create({
             data: {
                 fullName,
@@ -23,6 +35,7 @@ router.post('/signup', async (req, res) => {
             }
         });
 
+        // Generate a JWT token
         const token = jwt.sign({
             id: user.id,
             role: user.role,

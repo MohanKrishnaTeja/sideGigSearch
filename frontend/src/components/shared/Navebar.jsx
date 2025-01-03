@@ -28,8 +28,8 @@ export default function Navbar() {
     };
 
     return (
-        <div className="bg-white shadow-md">
-            <div className="flex items-center justify-between mx-auto max-w-7xl h-16 px-6">
+        <div className="bg-white shadow-lg border">
+            <div className="flex items-center justify-between  h-16 px-6">
                 {/* Logo and App Name */}
                 <div>
                     <Link to="/jobs">
@@ -89,7 +89,7 @@ export default function Navbar() {
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <Avatar className="cursor-pointer">
-                                                <AvatarImage src="https://github.com/shadcn.png" />
+                                                <AvatarImage src="https://shorturl.at/1fqcE" />
                                                 <AvatarFallback>{user?.fullName?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
                                             </Avatar>
                                         </PopoverTrigger>
